@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class AccountRepoImpl implements AccountRepo {
 
-    private static final AccountRepoImpl acc;
+    private static  AccountRepoImpl acc;
     static {
         System.out.println("Singleton instantiation");
         acc=new AccountRepoImpl();
@@ -25,10 +25,19 @@ public class AccountRepoImpl implements AccountRepo {
 
     @Override
     public BankAccount save(BankAccount bankAccount) {
-        Long accountId=++accountCount;
-        bankAccount.setAccountId(accountId);
-        bankAccountMap.put(accountId, bankAccount);
-        return bankAccount;
+
+
+            Long accountId;
+            synchronized (this) {
+                accountId = ++accountCount;
+            }
+            bankAccount.setAccountId(accountId);
+            synchronized (this){
+                bankAccountMap.put(accountId, bankAccount);
+            }
+
+            return bankAccount;
+
     }
 
     @Override
@@ -61,7 +70,7 @@ public class AccountRepoImpl implements AccountRepo {
         bankAccountMap.remove(id);
     }
 
-    public void populateData(){
+    public  void populateData(){
         for (int i = 0; i < 10; i++) {
             BankAccount bankAccount= Director.accountBuilder()
                     .balance(1000*Math.random()*90000)
@@ -71,10 +80,19 @@ public class AccountRepoImpl implements AccountRepo {
                     .build();
             save(bankAccount);
         }
+        System.out.println("***********************");
+        System.out.println(Thread.currentThread().getName());
+        System.out.println("Account Count = "+acc.accountCount);
+        System.out.println("Size: "+bankAccountMap.size() );
+        System.out.println("***********************");
     }
 
 
     public static AccountRepoImpl getInstance(){
+        /*if(acc == null){
+            System.out.println("Singleton instantiation");
+            acc=new AccountRepoImpl();
+        }*/
         return acc;
     }
 }

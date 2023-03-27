@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Demo {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, CloneNotSupportedException {
         BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
         System.out.println("entre Employe Id : ");
         int eid= Integer.parseInt(br.readLine());
@@ -33,6 +33,9 @@ public class Demo {
         System.out.println("\n");
         EmployeeRecord emp2= (EmployeeRecord) emp.getClone();
         emp2.showRecord();
+
+        EmployeeRecord emp3= emp.clone();
+        emp3.showRecord();
 
     }
 }

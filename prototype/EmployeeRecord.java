@@ -1,6 +1,8 @@
 package prototype;
 
-public class EmployeeRecord implements  Prototype{
+import model.BankAccount;
+
+public class EmployeeRecord implements  Prototype, Cloneable{
 
     private int id;
     private String name,designation;
@@ -28,5 +30,10 @@ public class EmployeeRecord implements  Prototype{
 
     public Prototype getClone() {
         return new EmployeeRecord(id,name,designation,salary,address);
+    }
+
+    @Override
+    public EmployeeRecord clone() throws CloneNotSupportedException {
+        return (EmployeeRecord) super.clone();
     }
 }
